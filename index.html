@@ -1,0 +1,185 @@
+<div id="qrcode"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+  const token = "abc123TEMP_TOKEN"; // серверээс авна
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://example.com/qr-login?token=" + token,
+    width: 200,
+    height: 200
+  });
+</script>
+cdn.jsdelivr.net
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Be My Valentine</title>
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #0f172a;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  .container {
+    text-align: center;
+  }
+
+  h1 {
+    margin-bottom: 20px;
+  }
+
+  button {
+    padding: 15px 30px;
+    font-size: 20px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    margin: 10px;
+    transition: all 0.3s ease;
+  }
+
+  .yes {
+    background: #22c55e;
+    color: black;
+  }
+
+  .no {
+    background: #ef4444;
+    color: white;
+  }
+
+  canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: none;
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="questionBox">
+  <h1>Will you be my Valentine? 💘</h1>
+  <button class="yes" id="yesBtn">Yes</button>
+  <button class="no" id="noBtn">No</button>
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+  const noMessages = [
+    "Are you sure? 😢",
+    "Think again 🥺",
+    "Pleaseee 💔",
+    "Don't do this 😭",
+    "Last chance 😖"
+  ];
+
+  let messageIndex = 0;
+  const noBtn = document.getElementById("noBtn");
+  const yesBtn = document.getElementById("yesBtn");
+  const questionBox = document.getElementById("questionBox");
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  noBtn.onclick = () => {
+    noBtn.textContent = noMessages[messageIndex % noMessages.length];
+    messageIndex++;
+    const size = parseFloat(getComputedStyle(yesBtn).fontSize);
+    yesBtn.style.fontSize = (size * 1.3) + "px";
+  };
+
+  yesBtn.onclick = () => {
+    questionBox.style.display = "none";
+    canvas.style.display = "block";
+    startHeartExplosion();
+  };
+
+  // -------------------------
+  // Heart Explosion Animation
+  // -------------------------
+  function startHeartExplosion() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particles = [];
+
+    function randomColor() {
+      const colors = ["#FF4C4C", "#FF69B4", "#FF1493", "#FFB6C1"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    function createParticle(x, y) {
+      return {
+        x: x,
+        y: y,
+        vx: (Math.random() - 0.5) * 8,
+        vy: (Math.random() - 0.5) * 8,
+        size: Math.random() * 4 + 2,
+        color: randomColor(),
+        life: 100
+      };
+    }
+
+    // Initial burst in center
+    for (let i = 0; i < 200; i++) {
+      particles.push(createParticle(canvas.width/2, canvas.height/2));
+    }
+
+    function drawHeart(x, y, size, color) {
+      ctx.save();
+      ctx.translate(x, y);
+      ctx.scale(size / 15, size / 15);
+      ctx.fillStyle = color;
+
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(-7, -7, -15, 5, 0, 15);
+      ctx.bezierCurveTo(15, 5, 7, -7, 0, 0);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.life -= 1;
+        p.vy += 0.05; // gravity
+        drawHeart(p.x, p.y, p.size, p.color);
+      });
+
+      // Remove dead particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        if (particles[i].life <= 0) {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Optional: continuous small bursts
+    setInterval(() => {
+      for (let i = 0; i < 5; i++) {
+        particles.push(createParticle(canvas.width/2, canvas.height/2));
+      }
+    }, 200);
+  }
+</script>
+
+</body>
+</html>

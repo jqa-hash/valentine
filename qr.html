@@ -1,0 +1,10 @@
+<div id="qrcode"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcodejs/qrcode.min.js"></script>
+<script>
+  new QRCode(document.getElementById("qrcode"), {
+    text: window.location.origin + "/valentine.html",
+    width: 200,
+    height: 200
+  });
+</script>
