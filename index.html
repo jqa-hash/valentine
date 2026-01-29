@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html> 
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -50,6 +50,31 @@
     left: 0;
     display: none;
   }
+
+  .love-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+    animation: fadeIn 2s ease-in-out forwards;
+  }
+
+  .love-text h1 {
+    font-size: 45px;
+    color: #ff69b4;
+  }
+
+  .love-text h2 {
+    font-size: 28px;
+    color: #ffc0cb;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translate(-50%, -60%); }
+    to { opacity: 1; transform: translate(-50%, -50%); }
+  }
 </style>
 </head>
 <body>
@@ -88,6 +113,16 @@
   yesBtn.onclick = () => {
     questionBox.style.display = "none";
     canvas.style.display = "block";
+
+    // Add love message
+    const loveMessage = document.createElement("div");
+    loveMessage.className = "love-text";
+    loveMessage.innerHTML = `
+      <h1>I love you so much bby 💖💞💘</h1>
+      <h2>Meet me on 14th of February 💌🌹✨</h2>
+    `;
+    document.body.appendChild(loveMessage);
+
     startHeartExplosion();
   };
 
@@ -117,7 +152,6 @@
       };
     }
 
-    // Initial burst in center
     for (let i = 0; i < 200; i++) {
       particles.push(createParticle(canvas.width/2, canvas.height/2));
     }
@@ -143,11 +177,10 @@
         p.x += p.vx;
         p.y += p.vy;
         p.life -= 1;
-        p.vy += 0.05; // gravity
+        p.vy += 0.05;
         drawHeart(p.x, p.y, p.size, p.color);
       });
 
-      // Remove dead particles
       for (let i = particles.length - 1; i >= 0; i--) {
         if (particles[i].life <= 0) {
           particles.splice(i, 1);
@@ -159,7 +192,6 @@
 
     animate();
 
-    // Optional: continuous small bursts
     setInterval(() => {
       for (let i = 0; i < 5; i++) {
         particles.push(createParticle(canvas.width/2, canvas.height/2));
@@ -169,5 +201,4 @@
 </script>
 
 </body>
-
 </html>
